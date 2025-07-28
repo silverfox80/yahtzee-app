@@ -1,4 +1,4 @@
-import { useState,Suspense,useRef,useEffect } from "react"
+import { useState,Suspense,useRef,useEffect,useCallback } from "react"
 import { Canvas } from "@react-three/fiber"
 import { Physics } from "@react-three/cannon"
 import { v4 as uuidv4 } from "uuid"
@@ -35,11 +35,27 @@ export default function Home() {
   const [state, setState] = useState(initializeState);
   
   // Monitoring state variables, when they change, useEffect will trigger
+  // If the function is redefined every render, React will see it as a new function each time. To avoid that, I wrapped it in useCallback so it's stable
+  const checkEndConditions = useCallback(() => {
+    //console.log("checkEndConditions:"+state.fixedScore.size)
+    if (state.fixedScore.size === 18) { 
+      //console.log("checkEndConditions met requisites")
+      openDialogBox()
+      setState((prevState) => {
+        //const { isRollDisabled } = prevState;
+        return {
+          ...prevState,
+          isRollDisabled: true
+        };
+      });
+    }
+  },[state.fixedScore])
+
   useEffect(() => { 
     //if (state.lockScore) return
     //console.log('Call reset when fixedScore changes')
     setState((prevState) => {
-      const { diceList,diceIndexAvailable,diceSelected,round,lockScore,allDiceSelected,score } = prevState;
+      //const { diceList,diceIndexAvailable,diceSelected,round,lockScore,allDiceSelected,score } = prevState;
       return {
         ...prevState,
         diceList: [],
@@ -54,113 +70,9 @@ export default function Home() {
     });
     //localStorage.clear()
     checkEndConditions()
-  },[state.fixedScore]) // <-- the parameter to listen
-  
-  useEffect(() => {    
-    setState((prevState) => {
-      //const { lockScore } = prevState;
-      return {
-        ...prevState,
-        lockScore: state.allDiceSelected?false:true,
-      };
-    });
-    state.allDiceSelected ? calculateScore() : resetScore();
-
-  },[state.allDiceSelected]) // <-- the parameter to listen
-  
-  useEffect(() => {
-    if (state.round === 3) {
-      const timer = setTimeout(() => {
-        setState((prevState) => {
-          const updatedDiceSelected = prevState.diceSelected.map((die) => ({
-            ...die,
-            active: true // auto-select all after delay
-          }));
-
-          return {
-            ...prevState,
-            diceSelected: updatedDiceSelected,
-            allDiceSelected: true,
-          };
-        });
-      }, 10000); // After (10 seconds) all the unselected dice are automatically selected
-
-      return () => clearTimeout(timer); // Cleanup
-    }
-  }, [state.round]);
-
-  // References
-  let group = useRef()
-  const countdownRef = useRef(0) // Ref for the countdown value
-  const timerRef = useRef(null)  // Ref for the timer ID
-
-  // EVENT HANDLERS
-  const onRollAllBtnClick = async (e,activate) => {
-    //
-    disableRollWithTimer(5) //Disable Roll for 5 seconds
-
-    // Check selection      
-    if (countDiceOnTable()==5 && state.round<3) {
-      await removeUnSelected()        
-    }
-
-    const availableDiceCount = 5 - countDiceSelected();
-    const currentAvailableIndexes = [...state.diceIndexAvailable];
- 
-    for (let i = 0; i < availableDiceCount; i++) {
-      const index = currentAvailableIndexes[i];
-      if (index !== undefined) {
-        dieRoll(index);
-        await sleep(500);
-      }
-    }
-    //
-  }
-  const handleScoreChange = (updatedScore) => {
-    setState((prevState) => {
-      const { fixedScore } = prevState;
-      return {
-        ...prevState,
-        fixedScore: new Map(updatedScore)
-      };
-    });
-  }
-  const openDialogBox = () => {
-    setState((prevState) => {
-      const { openDialog } = prevState;
-      return {
-        ...prevState,
-        openDialog: true
-      };
-    });
-  }
-  const handleDieStateChange = (newDieState) => {
-    //console.log('handleDieStateChange has been called from Die component :')
-    //console.log(newDieState)
-    //This callback coming from the Die component update the state on the main app component
-    setState((prevState) => {
-      const diceSelected = prevState.diceSelected.map((d) => {
-        if (d.die === newDieState.index) {
-          return {
-            ...d,
-            active: newDieState.isActive,
-            value: newDieState.dieValue
-          }
-        }
-        return d
-      })
-  
-      const allDiceSelected = diceSelected.every((d) => d.active) //chech if all dice are selected
-  
-      return {
-        ...prevState,
-        diceSelected,
-        allDiceSelected,
-      }
-    })
-  }
-  // Helper Functions
-  const calculateScore = () => {
+  },[state.fixedScore, checkEndConditions]) // <-- the parameter to listen
+  // I wrapped it in useCallback like with checkEndConditions
+  const calculateScore = useCallback(() => {
     const diceFaceCounts = Array(6).fill(0)
     const diceValues = state.diceSelected
                             .map((d) => d.value)   
@@ -168,7 +80,7 @@ export default function Home() {
       if (value > 0) diceFaceCounts[value - 1]++
     })
     
-    if (diceValues.length != 5) { 
+    if (diceValues.length !== 5) { 
       console.log("Something went wrong with the calculated dice values",diceValues)
       return 
     }
@@ -198,120 +110,117 @@ export default function Home() {
     newScore.set("LgStraight", isFullStraight ? 40 : 0)
 
     setState((prevState) => ({ ...prevState, score: newScore }))
-  }
-  const checkEndConditions = () => {
-    //console.log("checkEndConditions:"+state.fixedScore.size)
-    if (state.fixedScore.size == 18) { 
-      //console.log("checkEndConditions met requisites")
-      openDialogBox()
-      setState((prevState) => {
-        const { isRollDisabled } = prevState;
-        return {
-          ...prevState,
-          isRollDisabled: true
-        };
-      });
+  },[state.score, state.diceSelected])
+
+  useEffect(() => {    
+    setState((prevState) => {
+      //const { lockScore } = prevState;
+      return {
+        ...prevState,
+        lockScore: state.allDiceSelected?false:true,
+      };
+    });
+    state.allDiceSelected ? calculateScore() : resetScore();
+
+  },[state.allDiceSelected, calculateScore]) // <-- the parameter to listen
+  
+  useEffect(() => {
+    if (state.round === 3) {
+      const timer = setTimeout(() => {
+        setState((prevState) => {
+          const updatedDiceSelected = prevState.diceSelected.map((die) => ({
+            ...die,
+            active: true // auto-select all after delay
+          }));
+
+          return {
+            ...prevState,
+            diceSelected: updatedDiceSelected,
+            allDiceSelected: true,
+          };
+        });
+      }, 10000); // After (10 seconds) all the unselected dice are automatically selected
+
+      return () => clearTimeout(timer); // Cleanup
     }
+  }, [state.round]);
+
+  // References
+  let group = useRef()
+  const countdownRef = useRef(0) // Ref for the countdown value
+  const timerRef = useRef(null)  // Ref for the timer ID
+
+  // EVENT HANDLERS
+  const handleDieStateChange = (newDieState) => {
+    //console.log('handleDieStateChange has been called from Die component :')
+    //console.log(newDieState)
+    //This callback coming from the Die component update the state on the main app component
+    setState((prevState) => {
+      const diceSelected = prevState.diceSelected.map((d) => {
+        if (d.die === newDieState.index) {
+          return {
+            ...d,
+            active: newDieState.isActive,
+            value: newDieState.dieValue
+          }
+        }
+        return d
+      })
+  
+      const allDiceSelected = diceSelected.every((d) => d.active) //chech if all dice are selected
+  
+      return {
+        ...prevState,
+        diceSelected,
+        allDiceSelected,
+      }
+    })
   }
+  const handleScoreChange = (updatedScore) => {
+    setState((prevState) => {
+      //const { fixedScore } = prevState;
+      return {
+        ...prevState,
+        fixedScore: new Map(updatedScore)
+      };
+    });
+  }
+  const onRollAllBtnClick = async (e, activate) => {
+    disableRollWithTimer(5);
+
+    let availableIndexes = [...state.diceIndexAvailable];
+
+    if (countDiceOnTable() === 5 && state.round < 3) {
+      availableIndexes = await removeUnSelected(); // This now returns the updated indexes
+    }
+
+    const availableDiceCount = 5 - countDiceSelected();
+
+    for (let i = 0; i < availableDiceCount; i++) {
+      const index = availableIndexes[i];
+      if (index !== undefined) {
+        dieRoll(index);
+        await sleep(500);
+      }
+    }
+  };
+  const openDialogBox = () => {
+    setState((prevState) => {
+      //const { openDialog } = prevState;
+      return {
+        ...prevState,
+        openDialog: true
+      };
+    });
+  }
+  
+  // Helper Functions
   const countDiceSelected = () => {
     return (state.diceSelected).filter(value => value.active !== false).length
   }
   const countDiceOnTable = () => {
     return (state.diceList).filter(value => value !== false).length
   }
-  const disableRollWithTimer = (timeInSeconds) => {
-    
-    if (state.round==3) return false
-
-    //Disable Roll temporarily
-    setState((prevState) => {
-      const { isRollDisabled, round } = prevState;
-      return {
-        ...prevState,
-        isRollDisabled: true,
-        round: round+1
-      };
-    });
-    countdownRef.current = timeInSeconds; // Set countdown duration to 5 seconds)
-    //
-    // Start a timer for the disabling
-    timerRef.current = setInterval(() => {
-      countdownRef.current -= 1;
-      if (countdownRef.current <= 0) {
-        clearInterval(timerRef.current); // Clear the timer
-        timerRef.current = null; // Reset the timer ref
-        
-        setState((prevState) => {
-          const { isRollDisabled,round } = prevState;
-          return {
-            ...prevState,
-            isRollDisabled: round>2 ? true : false
-          };
-        }); //Re-enable after countdown
-        
-      }
-    }, 1000);
-  }
-  const hasStraight = (values, length) => {
-    const uniqueSorted = [...new Set(values)].sort((a, b) => a - b);
-    let count = 1;
-    for (let i = 1; i < uniqueSorted.length; i++) {
-      count = uniqueSorted[i] === uniqueSorted[i - 1] + 1 ? count + 1 : 1;
-      if (count >= length) return true;
-    }
-    return false;
-  }
-  const removeUnSelected = async () => {
-    setState((prevState) => {
-      const { diceList, diceIndexAvailable, diceSelected } = prevState;
-      let dia = diceIndexAvailable
-      let ds = diceSelected
-      const dl = diceList
-      
-
-      for (let i=0;i<5;i++){
-        
-        if(!ds[i].active) {  //if die has not been selected      
-          
-          dl.filter((el,index) => {  //find it in the list
-            if (el.props.index == ds[i].die) {
-              delete dl[index] //and remove it from the diceList
-              return true
-            }            
-          })
-          ds[i].value="undefined";
-          dia.push(i+1); //set the die as available
-        }     
-      }
-      console.log("Again available index:"+dia)
-      return {
-        ...prevState,
-        diceSelected: ds,
-        diceList:dl.filter( e =>String(e).trim() ),
-        diceIndexAvailable: dia,
-        
-      };
-    })
-  }
-  const resetScore = () => {
-    // Cycling on Map to reset the score
-    setState((prevState) => {
-      const { score } = prevState;
-      return {
-        ...prevState,
-        score: INITIAL_SCORE
-      };
-    });
-  }
-  const restartGame = () => {  
-    setState(initializeState())
-    console.clear()
-  }
-  const sleep = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  // Business Logic for die rolling
   const dieRoll = (index) => {
     const selectedDie = state.diceSelected.find((d) => d.die === index);
 
@@ -332,6 +241,102 @@ export default function Home() {
       }));
     }
   }
+  const disableRollWithTimer = (timeInSeconds) => {
+    
+    if (state.round===3) return false
+
+    //Disable Roll temporarily
+    setState((prevState) => {
+      const { round } = prevState;
+      return {
+        ...prevState,
+        isRollDisabled: true,
+        round: round+1
+      };
+    });
+    countdownRef.current = timeInSeconds; // Set countdown duration to 5 seconds)
+    //
+    // Start a timer for the disabling
+    timerRef.current = setInterval(() => {
+      countdownRef.current -= 1;
+      if (countdownRef.current <= 0) {
+        clearInterval(timerRef.current); // Clear the timer
+        timerRef.current = null; // Reset the timer ref
+        
+        setState((prevState) => {
+          const { round } = prevState;
+          return {
+            ...prevState,
+            isRollDisabled: round>2 ? true : false
+          };
+        }); //Re-enable after countdown
+        
+      }
+    }, 1000);
+  }
+  const hasStraight = (values, length) => {
+    const uniqueSorted = [...new Set(values)].sort((a, b) => a - b);
+    let count = 1;
+    for (let i = 1; i < uniqueSorted.length; i++) {
+      count = uniqueSorted[i] === uniqueSorted[i - 1] + 1 ? count + 1 : 1;
+      if (count >= length) return true;
+    }
+    return false;
+  }
+  const removeUnSelected = () => {
+    return new Promise((resolve) => {
+      setState((prevState) => {
+        const { diceList, diceIndexAvailable, diceSelected } = prevState;
+
+        const updatedDiceList = [...diceList];
+        const updatedDiceSelected = [...diceSelected];
+        const updatedDiceIndexAvailable = [...diceIndexAvailable];
+
+        for (let i = 0; i < 5; i++) {
+          if (!updatedDiceSelected[i].active) {
+            const dieIndex = updatedDiceSelected[i].die;
+
+            const foundIndex = updatedDiceList.findIndex(
+              (die) => die.props.index === dieIndex
+            );
+
+            if (foundIndex !== -1) {
+              updatedDiceList.splice(foundIndex, 1);
+            }
+
+            updatedDiceSelected[i].value = undefined;
+            updatedDiceIndexAvailable.push(i + 1);
+          }
+        }
+        // Resolve with the updated values so we can use them immediately
+        resolve(updatedDiceIndexAvailable);
+
+        return {
+          ...prevState,
+          diceSelected: updatedDiceSelected,
+          diceList: updatedDiceList.filter((e) => String(e).trim()),
+          diceIndexAvailable: updatedDiceIndexAvailable,
+        };
+      });
+    });
+  };
+  const resetScore = () => {
+    // Cycling on Map to reset the score
+    setState((prevState) => {
+      //const { score } = prevState;
+      return {
+        ...prevState,
+        score: INITIAL_SCORE
+      };
+    });
+  }
+  const restartGame = () => {  
+    setState(initializeState())
+    console.clear()
+  }
+  const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   return (
     <div className="container">
@@ -342,7 +347,7 @@ export default function Home() {
           <span className="round" style={{visibility: state.round ? 'visible' : 'hidden' }}>ROUND { state.round }</span>
           <div className="selectedDiceDisplay">
           {state.diceSelected.map((el, index) => 
-            el?.value && el.active==true ? ( // Only render if el.value exists and the die is selected
+            el?.value && el.active===true ? ( // Only render if el.value exists and the die is selected
               <span 
                 key={el.id || index} 
                 className={`face face_${el.value}`} 
