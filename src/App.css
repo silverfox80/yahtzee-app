@@ -1,0 +1,120 @@
+body {
+    background-color:#FEEDDB;
+}
+.container {
+    position: absolute;
+    top:0px;
+    left:0px;
+    height: 100%;
+    background-color:grey;
+}
+
+.columnRight{
+    position: absolute;
+    left: 350px;
+    width: 76vw;
+    height: calc(100% - 57px);
+    background:#FDECDC;
+}
+  
+.columnLeft{
+    position: fixed;
+    width: 345px;
+    height: 800px;
+}
+
+.controls {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding: 4px 8px 4px 4px;
+    margin-right: -2px;
+    min-height:40px;
+}
+.controls > button {
+    display: inline;
+    align-items: center;
+    padding: 6px 14px;
+    margin-right:5px;
+    margin-top:10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    border-radius: 6px;
+    border: none;
+
+    color: #fff;
+    cursor:pointer;
+    background-origin: border-box;
+    box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;    
+}
+.controls > button.roll {
+    background: linear-gradient(180deg, #4B91F7 0%, #175e13 100%);
+}
+.controls > button.restart {
+    background: linear-gradient(180deg, #eb1717 0%, #175e13 100%);
+}
+.controls > button.debug {
+    background: linear-gradient(180deg, #7d7979 0%, #175e13 100%);
+}
+.controls > button:focus {
+    box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
+    outline: 0;
+}
+.controls > button:disabled,
+.controls > button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor:not-allowed;
+}
+
+.canvas{
+    background: #000;
+    border: 8px solid white;
+}
+
+div.selectedDiceDisplay{
+    width:700px;
+    text-align: center;
+    display: inline-block;
+}
+span.face{
+    
+    display: inline-block;
+    width:30px;
+    height: 30px;
+    vertical-align: bottom;
+    border: 1px solid black;
+    margin-left: 5px;
+}
+span.face_1{
+    background:url("/public/textures/dice/dice_1.jpeg") no-repeat top left;
+    background-size: contain;
+}
+span.face_2{
+    background:url("/public/textures/dice/dice_2.jpeg") no-repeat top left;
+    background-size: contain;
+}
+span.face_3{
+    background:url("/public/textures/dice/dice_3.jpeg") no-repeat top left;
+    background-size: contain;
+}
+span.face_4{
+    background:url("/public/textures/dice/dice_4.jpeg") no-repeat top left;
+    background-size: contain;
+}
+span.face_5{
+    background:url("/public/textures/dice/dice_5.jpeg") no-repeat top left;
+    background-size: contain;
+}
+span.face_6{
+    background:url("/public/textures/dice/dice_6.jpeg") no-repeat top left;
+    background-size: contain;
+}
+.right{
+    float:right;
+}
+.round{
+    font-weight: bold;
+    margin-left: 20px;
+}
