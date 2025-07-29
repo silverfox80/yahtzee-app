@@ -24,7 +24,9 @@ class ScoreSheet extends React.Component {
   }
 
   handleClick = (el) => {
-    if (this.props.lock) return //if the scoresheet is locked, just exit the function
+    const { lockScore } = this.props;
+
+    if (lockScore) return //if the scoresheet is locked, just exit the function
 
     const newVal = new Map([...this.props.confirmedScoreArray])      
     newVal.set(el.target.id,parseInt(el.target.textContent))

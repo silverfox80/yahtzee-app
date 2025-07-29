@@ -41,10 +41,10 @@
 }
 
 .scoresheet_Aces:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
-    background-size:contain;
-    background-position: 30% 0%;
+    background-size:cover;
+    background-position: -15px 3px;
     cursor:pointer;
 }
 
@@ -65,10 +65,10 @@
 }
 
 .scoresheet_Twos:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 3px;
     cursor:pointer;
 }
 
@@ -89,10 +89,10 @@
 }
 
 .scoresheet_Threes:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 3px;
     cursor:pointer;
 }
 
@@ -113,10 +113,10 @@
 }
 
 .scoresheet_Fours:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 3px;
     cursor:pointer;
 }
 
@@ -137,10 +137,10 @@
 }
 
 .scoresheet_Fives:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 3px;
     cursor:pointer;
 }
 
@@ -161,10 +161,10 @@
 }
 
 .scoresheet_Sixes:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 3px;
     cursor:pointer;
 }
 
@@ -217,9 +217,9 @@
 }
 
 .scoresheet_ThreeOfAKind{
-    min-width: 65px;
-    min-height: 36px;
-    max-height: 36px;
+    min-width: 64px;
+    min-height: 44px;
+    max-height: 44px;
     display: inline-block;
     position: relative;
     top: 508px;
@@ -233,17 +233,17 @@
 }
 
 .scoresheet_ThreeOfAKind:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 2px;
     cursor:pointer;
 }
 
 .scoresheet_FourOfAKind{
-    min-width: 65px;
-    min-height: 36px;
-    max-height: 36px;
+    min-width: 64px;
+    min-height: 44px;
+    max-height: 44px;
     display: inline-block;
     position: relative;
     top: 502px;
@@ -257,17 +257,17 @@
 }
 
 .scoresheet_FourOfAKind:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 2px;
     cursor:pointer;
 }
 
 .scoresheet_FullHouse{
-    min-width: 65px;
-    min-height: 36px;
-    max-height: 36px;
+    min-width: 64px;
+    min-height: 44px;
+    max-height: 44px;
     display: inline-block;
     position: relative;
     top: 542px;
@@ -281,17 +281,17 @@
 }
 
 .scoresheet_FullHouse:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 2px;
     cursor:pointer;
 }
 
 .scoresheet_SmStraight{
-    min-width: 65px;
-    min-height: 36px;
-    max-height: 36px;
+    min-width: 64px;
+    min-height: 44px;
+    max-height: 44px;
     display: inline-block;
     position: relative;
     top: 582px;
@@ -305,17 +305,17 @@
 }
 
 .scoresheet_SmStraight:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 2px;
     cursor:pointer;
 }
 
 .scoresheet_LgStraight{
-    min-width: 65px;
-    min-height: 36px;
-    max-height: 36px;
+    min-width: 64px;
+    min-height: 44px;
+    max-height: 44px;
     display: inline-block;
     position: relative;
     top: 622px;
@@ -329,17 +329,17 @@
 }
 
 .scoresheet_LgStraight:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 2px;
     cursor:pointer;
 }
 
 .scoresheet_Yahtzee{
-    min-width: 65px;
-    min-height: 36px;
-    max-height: 36px;
+    min-width: 64px;
+    min-height: 44px;
+    max-height: 44px;
     display: inline-block;
     position: relative;
     top: 662px;
@@ -353,21 +353,21 @@
 }
 
 .scoresheet_Yahtzee:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 2px;
     cursor:pointer;
 }
 
 .scoresheet_Chance{
-    min-width: 65px;
-    min-height: 36px;
-    max-height: 36px;
+    min-width: 64px;
+    min-height: 44px;
+    max-height: 44px;
     display: inline-block;
     position: relative;
-    top: 662px;
-    left: 295px;
+    top: 653px;
+    left: 290px;
     z-index: 9;
     /*background-color:gold;*/
     font-size: xx-large;
@@ -377,10 +377,10 @@
 }
 
 .scoresheet_Chance:hover:not(.scoresheet_score_taken){
-    background-image: url('/public/images/circle-red.png');
+    background-image: url('/public/images/circle-red.webp');
     background-repeat:space;
     background-size:cover;
-    background-position: -6px -8px;
+    background-position: -15px 2px;
     cursor:pointer;
 }
 

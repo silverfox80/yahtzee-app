@@ -385,6 +385,7 @@ export default function Home() {
         <ScoreSheet 
           confirmedScoreArray={state.fixedScore}
           scoreArray={new Map(state.score)}
+          lockScore={state.lockScore}
           onChangeScore={handleScoreChange} 
         />
       </div>
