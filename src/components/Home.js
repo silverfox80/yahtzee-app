@@ -72,6 +72,7 @@ export default function Home() {
     checkEndConditions()
   },[state.fixedScore, checkEndConditions]) // <-- the parameter to listen
   // I wrapped it in useCallback like with checkEndConditions
+  
   const calculateScore = useCallback(() => {
     const diceFaceCounts = Array(6).fill(0)
     const diceValues = state.diceSelected

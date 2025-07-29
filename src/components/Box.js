@@ -25,15 +25,15 @@ function Box(props) {
     ]
   }))
   
-  const texture_edge = useLoader(TextureLoader, "textures/metal/metal_surface_texture_1_by_fantasystock_d2xdbnz.jpg")
+  const texture_edge = useLoader(TextureLoader, "textures/metal/metal-surface-optimized.webp")
   texture_edge.wrapS = MirroredRepeatWrapping;
   texture_edge.repeat.set(2, 1);
   texture_edge.needsUpdate = true;
-  const texture_plank = useLoader(TextureLoader, "textures/wood/wood_texture_4_by_rifificz_d38h68h.jpg")
+  const texture_plank = useLoader(TextureLoader, "textures/wood/wood-rustic-brown-optimized.webp")
   texture_plank.wrapS = MirroredRepeatWrapping;
   texture_plank.repeat.set(19, 1);
   texture_plank.needsUpdate = true;
-  const texture_mat = useLoader(TextureLoader, "textures/pooltable/dark-green-wall.jpg");
+  const texture_mat = useLoader(TextureLoader, "textures/pooltable/dark-green-wall-optimized.webp");
 
   return (
     <group ref={ref}>

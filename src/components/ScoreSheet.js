@@ -10,16 +10,17 @@ class ScoreSheet extends React.Component {
 
   componentDidUpdate(prevProps) {  // handle updates from parent components
     
-    const { confirmedScoreArray } = this.props;
+    const { confirmedScoreArray, scoreArray } = this.props;
 
-    if (!Array.isArray(confirmedScoreArray)) {
-      //console.error("confirmedScoreArray is not provided or invalid.");
-      return;
+    if (!confirmedScoreArray || !scoreArray) {
+      console.error("Score arrays are not provided or invalid.");
+      return; // Or render a fallback UI
     }
 
-    if (prevProps.confirmedScoreArray !== confirmedScoreArray) {
+    if (prevProps.confirmedScoreArray !== this.props.confirmedScoreArray) {
       this.setState({ confirmedScore: confirmedScoreArray });
     }
+    
   }
 
   handleClick = (el) => {
