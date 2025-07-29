@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image for building
-FROM node:22-slim AS builder
+FROM node:22 AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -26,6 +26,7 @@ WORKDIR /app
 ENV NODE_ENV production
 
 # Copy the build output and necessary files from the builder stage
+COPY --from=builder /app/src /app/src
 COPY --from=builder /app/build /app/build
 COPY --from=builder /app/public /app/public
 COPY --from=builder /app/package*.json /app/
@@ -35,4 +36,4 @@ COPY --from=builder /app/node_modules /app/node_modules
 EXPOSE 3000
 
 # Define the command to run the app
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]
