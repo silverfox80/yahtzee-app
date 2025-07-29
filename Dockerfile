@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install dependencies first
 COPY package.json package-lock.json ./
-RUN npm ci --verbose
+RUN npm ci --verbose --registry=https://registry.npmjs.org/
 
 # Copy source and build
 COPY . .
