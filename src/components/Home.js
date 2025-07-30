@@ -38,7 +38,7 @@ export default function Home() {
   // If the function is redefined every render, React will see it as a new function each time. To avoid that, I wrapped it in useCallback so it's stable
   const checkEndConditions = useCallback(() => {
     //console.log("checkEndConditions:"+state.fixedScore.size)
-    if (state.fixedScore.size === 18) { 
+    if (state.fixedScore.size === 19) { 
       //console.log("checkEndConditions met requisites")
       openDialogBox()
       setState((prevState) => {
